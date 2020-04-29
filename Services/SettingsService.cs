@@ -1,13 +1,13 @@
-﻿using DakboardKiosk.Services.Abstractions;
-using System;
+﻿using System;
+using DakboardKiosk.Services.Abstractions;
 using Template10.Services;
 
 namespace DakboardKiosk.Services
 {
     public class SettingsService : ISettingsService
     {
-        SecretHelper _secretHelper = new SecretHelper();
-        SettingsHelper _settingsHelper = new SettingsHelper();
+        private readonly SecretHelper _secretHelper = new SecretHelper();
+        private readonly SettingsHelper _settingsHelper = new SettingsHelper();
 
         public string ApiKey
         {
