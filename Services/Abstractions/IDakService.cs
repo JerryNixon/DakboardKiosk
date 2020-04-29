@@ -7,7 +7,7 @@ namespace DakboardKiosk.Services.Abstractions
 {
     public interface IDakService
     {
-        Task<IEnumerable<Screen>> GetScreensAsync();
+        Task<IEnumerable<Screen>> ListScreensAsync();
 
         Task<Uri> GetDefaultUriAsync();
     }

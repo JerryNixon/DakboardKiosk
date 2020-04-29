@@ -5,6 +5,12 @@ VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DakboardKiosk", "DakboardKiosk.csproj", "{2B729244-E05F-4D20-A3C6-E51090378BE6}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4FACF96C-360E-4551-8B93-E92D6F3BA6BE}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.vsconfig = .vsconfig
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM

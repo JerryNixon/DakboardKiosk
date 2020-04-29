@@ -1,23 +1,21 @@
 ﻿using DakboardKiosk.Services.Abstractions;
-using DakboardKiosk.Services.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Template10.Mvvm;
+using Template10.Navigation;
 
 namespace DakboardKiosk.ViewModels
 {
-    public class SettingsPageViewModel
+    public class SettingsPageViewModel : ViewModelBase
     {
-        ISecretService _secretService;
-
-        public string ApiKey
+        public SettingsPageViewModel(ISettingsService settingsService)
         {
-            get => _secretService.Read(Secret.ApiKey);
-            set => _secretService.Write(Secret.ApiKey, value);
+            Settings = settingsService;
         }
 
-        public 
+        public override void OnNavigatedTo(INavigationParameters parameters)
+        {
+            // todo
+        }
+
+        public ISettingsService Settings { get; }
     }
 }
