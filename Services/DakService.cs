@@ -1,42 +1,51 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
+using DakboardKiosk.Abstractions;
 using DakboardKiosk.Models;
-using DakboardKiosk.Services.Abstractions;
-using Newtonsoft.Json;
 
 namespace DakboardKiosk.Services
 {
     // https://blog.dakboard.com/new-dakboard-api/
     public class DakService : IDakService
     {
-        private readonly ISettingsService _settingsService;
+        private readonly IHttpService _httpService;
 
-        public DakService(ISettingsService settingsService)
+        public DakService(IHttpService httpService)
         {
-            _settingsService = settingsService;
+            _httpService = httpService;
         }
 
-        public async Task<IEnumerable<Screen>> ListScreensAsync()
+        public async Task<bool> ValidateApiKeyAsync()
         {
-            var key = _settingsService.ApiKey ?? throw new NullReferenceException("ApiKey");
-            var url = $"https://dakboard.com/api/2/screens?api_key={key}";
-            var http = new HttpClient
+            try
             {
-                Timeout = TimeSpan.FromMinutes(1),
-            };
-            var json = await http.GetStringAsync(url);
-            return JsonConvert.DeserializeObject<Screen[]>(json);
+                var url = $"https://dakboard.com/api/2/screens";
+                await _httpService.GetAsync(url);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        public async Task<Uri> GetDefaultUriAsync()
+        public async Task<IEnumerable<Screen>> GetScreensAsync()
         {
-            var screens = await ListScreensAsync();
-            var screen = screens.First(x => x.IsDefault == 1);
-            var url = $"https://www.dakboard.com/app/screenPredefined?p={screen.Id}";
-            return new Uri(url);
+            var url = $"https://dakboard.com/api/2/screens";
+            return await _httpService.GetAsync<Screen[]>(url);
+        }
+
+        public async Task<Screen> GetScreenAsync(string screenId)
+        {
+            var url = $"https://dakboard.com/api/2/screens/{screenId}";
+            return await _httpService.GetAsync<Screen>(url);
+        }
+
+        public async Task<Screen> GetDefaultScreenAsync()
+        {
+            var screens = await GetScreensAsync();
+            return screens.First(x => x.IsDefault == 1);
         }
     }
 }

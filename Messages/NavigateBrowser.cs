@@ -2,7 +2,7 @@
 
 namespace DakboardKiosk.Messages
 {
-    public class RefreshBrowser : Prism.Events.PubSubEvent<Uri>
+    public class NavigateBrowser : Prism.Events.PubSubEvent<Uri>
     {
         // empty
     }

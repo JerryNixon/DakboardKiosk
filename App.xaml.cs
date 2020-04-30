@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using DakboardKiosk.Abstractions;
 using DakboardKiosk.Services;
-using DakboardKiosk.Services.Abstractions;
 using DakboardKiosk.ViewModels;
 using DakboardKiosk.Views;
 using Prism.Ioc;
@@ -22,10 +22,13 @@ namespace DakboardKiosk
 
         public override void RegisterTypes(IContainerRegistry container)
         {
-            container.RegisterView<BrowserPage>();
+            container.RegisterView<BrowserPage, BrowserPageViewModel>();
             container.RegisterView<SettingsPage, SettingsPageViewModel>();
+
             container.Register<ISettingsService, SettingsService>();
             container.Register<IDakService, DakService>();
+            container.Register<IHttpService, HttpService>();
+            container.Register<IRefreshService, RefreshService>();
             container.GetContainer().RegisterFactory<INavigationService>(e => NavigationService.Instances.First().Value);
         }
 
@@ -49,7 +52,8 @@ namespace DakboardKiosk
                 var frame = shell.MainFrame;
                 var nav = NavigationFactory.Create(frame)
                     .AttachGestures(Window.Current, Gesture.Refresh);
-                await nav.NavigateAsync(nameof(BrowserPage));
+
+                await nav.NavigateAsync(nameof(SettingsPage));
             }
         }
     }

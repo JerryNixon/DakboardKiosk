@@ -2,13 +2,110 @@
     x:Class="DakboardKiosk.Views.SettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:DakboardKiosk.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:converters="using:DakboardKiosk.Converters"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
+    <Page.Resources>
+        <converters:ZeroToVisibleConverter x:Name="ZeroToVisibleConverter" />
+        <converters:BoolToCheckConverter x:Name="BoolToCheckConverter" />
+    </Page.Resources>
+
     <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <CommandBar Grid.Row="0">
+            <AppBarButton Label="Home" Icon="Home" />
+        </CommandBar>
+
+        <ScrollViewer Grid.Row="1">
+
+            <RelativePanel>
+
+                <StackPanel Margin="32" Width="400" HorizontalAlignment="Left" Spacing="24" x:Name="SettingsContainer">
+                    <TextBlock Text="Settings" Style="{StaticResource TitleTextBlockStyle}" />
+
+                    <TextBlock Style="{ThemeResource SubtitleTextBlockStyle}">API Key</TextBlock>
+                    <TextBlock TextWrapping="WrapWholeWords">
+                        We need the API key from your DAKboard account.
+                        This kiosk app safely stores your keys, 
+                        encrypted in the Windows credential store. 
+                        You can test your key by clicking Validate.
+                    </TextBlock>
+
+                    <!-- api key -->
+                    <RelativePanel>
+                        <PasswordBox Password="{x:Bind ViewModel.Settings.ApiKey, Mode=TwoWay}" 
+                         x:Name="AccountKeyTextBox" 
+                         PlaceholderText="DAKboard API key"
+                         RelativePanel.AlignLeftWithPanel="True" 
+                         RelativePanel.LeftOf="ValidationMarkTextBox">
+                            <PasswordBox.Header>
+                                <StackPanel>
+                                    <HyperlinkButton NavigateUri="https://www.dakboard.com/settings/api" Padding="0">Account Api Key</HyperlinkButton>
+                                    <ProgressBar IsIndeterminate="True" Visibility="{x:Bind ViewModel.ValidateBusy, Mode=OneWay}" />
+                                </StackPanel>
+                            </PasswordBox.Header>
+                        </PasswordBox>
+                        <TextBlock Text="{x:Bind ViewModel.ValidApiKey, Mode=OneWay, Converter={StaticResource BoolToCheckConverter}}" 
+                            RelativePanel.AlignRightWithPanel="True" Margin="8,22,0,0" x:Name="ValidationMarkTextBox" FontSize="24" />
+                        <Button Style="{StaticResource TextBlockButtonStyle}" RelativePanel.Below="AccountKeyTextBox" Click="{x:Bind ViewModel.ValidateApiKeyAsync}">Validate key</Button>
+                    </RelativePanel>
+
+                    <TextBlock Style="{ThemeResource SubtitleTextBlockStyle}">Screen</TextBlock>
+                    <TextBlock TextWrapping="WrapWholeWords">
+                        Assign which screen will be shown in this kiosk. The list 
+                        below shows the available screens defined in your 
+                        DAKboard account. You can refresh the list at any time.
+                    </TextBlock>
+
+                    <!-- screen list -->
+                    <ListView ItemsSource="{x:Bind ViewModel.Screens}" SelectedItem="{x:Bind ViewModel.SelectedScreen, Mode=TwoWay}" DisplayMemberPath="Name">
+                        <ListView.Header>
+                            <StackPanel BorderBrush="White" BorderThickness="0,0,0,1">
+                                <HyperlinkButton NavigateUri="https://www.dakboard.com/screens" Margin="0,0,0,4" Padding="0">Available Screens</HyperlinkButton>
+                                <ProgressBar IsIndeterminate="True" Visibility="{x:Bind ViewModel.ListBusy, Mode=OneWay}" />
+                            </StackPanel>
+                        </ListView.Header>
+                        <ListViewItem Content="Screen 123ABC" />
+                        <ListViewItem Content="Screen 123ABC" />
+                        <ListViewItem Content="Screen 123ABC" />
+                        <ListViewItem Content="Screen 123ABC" />
+                        <ListView.Footer>
+                            <StackPanel Margin="4,0" Spacing="4">
+                                <TextBlock Text="No screens found" Visibility="{x:Bind ViewModel.Screens.Count, Converter={StaticResource ZeroToVisibleConverter}, Mode=OneWay}" Opacity=".5" />
+                                <Button Style="{StaticResource TextBlockButtonStyle}" Click="{x:Bind ViewModel.FillScreensAsync}">Refresh</Button>
+                            </StackPanel>
+                        </ListView.Footer>
+                    </ListView>
+
+                    <TextBlock Style="{ThemeResource SubtitleTextBlockStyle}">Maintenance</TextBlock>
+                    <TextBlock TextWrapping="WrapWholeWords">
+                        Maintenance settings help ensure the quality of the kiosk
+                        with Refresh Time which refreshes the kiosk daily should
+                        network or technical reasons introduce any problems.
+                    </TextBlock>
+
+                    <!-- maintenance time -->
+                    <StackPanel>
+                        <TimePicker Header="Maintenance Refresh Time" MinuteIncrement="15" Time="{x:Bind ViewModel.Settings.RefreshRate, Mode=TwoWay}" />
+                        <Button Style="{StaticResource TextBlockButtonStyle}" Click="{x:Bind ViewModel.RefreshBrowser}">Refresh browser now</Button>
+                    </StackPanel>
+
+                </StackPanel>
+
+                <StackPanel Margin="32" Width="400" HorizontalAlignment="Left" Spacing="24" RelativePanel.RightOf="SettingsContainer">
+                    <TextBlock Style="{ThemeResource SubtitleTextBlockStyle}">About DAKboard kiosk</TextBlock>
+                </StackPanel>
+
+            </RelativePanel>
+            
+        </ScrollViewer>
 
     </Grid>
 </Page>

@@ -1,17 +1,17 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
-
 namespace DakboardKiosk.Views
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class BrowserPage : Page
     {
         public BrowserPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
+            DataContextChanged += (s, e)
+                => ViewModel.NavigateCallback = (uri) => MainWebView.Navigate(uri);
         }
+
+        public ViewModels.BrowserPageViewModel ViewModel 
+            => DataContext as ViewModels.BrowserPageViewModel;
     }
 }

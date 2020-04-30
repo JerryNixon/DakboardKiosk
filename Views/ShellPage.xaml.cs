@@ -1,6 +1,4 @@
-﻿using Template10.Navigation;
-using Template10.Services;
-using Windows.ApplicationModel.Activation;
+﻿using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 

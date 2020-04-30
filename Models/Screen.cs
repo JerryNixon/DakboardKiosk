@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 
 namespace DakboardKiosk.Models
 {
@@ -27,5 +28,15 @@ namespace DakboardKiosk.Models
 
         [JsonProperty("is_default")]
         public long IsDefault { get; set; }
+
+        [JsonIgnore]
+        public Uri Url
+        {
+            get
+            {
+                var url = $"https://www.dakboard.com/app/screenPredefined?p={Id}";
+                return new Uri(url);
+            }
+        }
     }
 }

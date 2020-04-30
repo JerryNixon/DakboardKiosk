@@ -10,5 +10,6 @@
 
     <Grid>
         <TextBlock Text="Browser Page" Style="{StaticResource HeaderTextBlockStyle}" Margin="32" />
+        <WebView x:Name="MainWebView" />
     </Grid>
 </Page>
